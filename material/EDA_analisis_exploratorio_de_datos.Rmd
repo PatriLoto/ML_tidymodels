@@ -104,7 +104,7 @@ background-size: cover
 .bg-near-white.b--purple.ba.bw2.br3.shadow-5.ph4.mt5[
 ### **EDA** o Análisis Exploratorio de Datos 
 
-#### es un ciclo iterativo y un proceso creativo en donde, 
+#### es un ciclo iterativo en donde, 
 
 #### - **Generas preguntas acerca de tus datos.**
 
@@ -134,18 +134,13 @@ background-size: cover
 ]
 
 .footnote[Fuente: [R para Ciencia de  Datos](https://es.r4ds.hadley.nz/an%C3%A1lisis-exploratorio-de-datos-eda.html)]
+
 ---
+background-image: url("https://media.giphy.com/media/1jl173guBKkbvC03rQ/giphy.gif")
+background-size: cover
+class: inverse, middle, center
 ## ¿Por qué es importante el Análisis exploratorio de datos? `r emo::ji("bulb")`
 
-.bg-near-white.b--purple.ba.bw2.br3.shadow-5.ph4.mt5[
-
-### Porque te permite conocer y entender tus datos. ]
-
---
-
-```{r echo=FALSE, out.width = '60%', align="center"}
-knitr::include_graphics("https://media.giphy.com/media/1jl173guBKkbvC03rQ/giphy.gif")
-```
 
 ---
 
@@ -287,11 +282,13 @@ library(datos)
 library(dplyr)
 ```
 
-```{r estructura-dataset, echo=FALSE}
+```{r estructura-dataset, echo=TRUE}
 #library(DT)
 #datatable(penguins, options = list(pageLength = 5))
 
 pinguinos %>% glimpse
+
+# otra opción: str(pinguinos)
 ```
 
 ```{r img-pico, echo=FALSE, out.width = '35%',  fig.align='right'}
@@ -310,7 +307,7 @@ pinguinos %>%
   count(especie)
 ```
 
-**Las clase Barbijo no está balanceada respecto a las restantes**
+**Hallazgo: el dataset está desbalanceado**
 
 
 
@@ -336,7 +333,7 @@ pinguinos %>% summary
 ---
 ## Distribución de nuestras variables `r emo::ji("bar_chart")`
 
-```{r distribucion-largo-pico, message=FALSE, warning=FALSE, out.width = '45%', dpi= 100,  fig.align='center'}
+```{r distribucion-largo-pico, message=FALSE, warning=FALSE, fig.height=5, fig.width=8, fig.show = "hold", fig.align='center'}
 library(ggplot2)
 library(hrbrthemes)
 colores  <- c("darkorange","purple","cyan4") 
@@ -349,9 +346,9 @@ ggplot(pinguinos, aes(x= largo_pico_mm, fill=especie)) +
 ## Distribución de nuestras variables `r emo::ji("bar_chart")`
 #### variable: largo_pico_mm
 
-```{r geom_density, message=FALSE, warning=FALSE, out.width = '50%',  fig.align='center'}
+```{r geom_density, message=FALSE, warning=FALSE, fig.height=5, fig.width=8, fig.show = "hold", fig.align='center'}
 ggplot(pinguinos, aes(x= largo_pico_mm, fill=especie)) +
-  geom_density(binwidth = 0.8, na.rm= TRUE) +
+  geom_density(binwidth = 0.8, alpha=0.7, na.rm= TRUE) +
   scale_fill_manual(values= colores) +
   labs(x="largo pico(mm)") +
   theme_ipsum_tw()
@@ -360,32 +357,33 @@ ggplot(pinguinos, aes(x= largo_pico_mm, fill=especie)) +
 
 ### ¿Cómo es la distribución de las especies respecto del largo de las aletas?
 
-```{r message=FALSE, warning=FALSE, out.width = '50%',fig.align='center'}
+```{r message=FALSE, warning=FALSE, fig.height=5, fig.width=8, fig.show = "hold", fig.align='center'}
 
 ggplot(pinguinos, aes(x=reorder(especie, masa_corporal_g, FUN = median), y= masa_corporal_g, fill=especie)) +
   geom_boxplot(na.rm = TRUE)+
   scale_fill_manual(values=colores) +
-  labs(x= 'especies', y='masa corporal (gr.)', title= 'Distribución del peso según la especie') +
+  labs(x= ' ', y='masa corporal (gr.)', title= 'Distribución del peso según la especie') +
   theme_ipsum_tw()
 
 ```
 ---
 ### ¿Existe relación entre masa_corporal_g y el largo_aleta_mm?
 
-```{r scatterplot, message=FALSE, warning=FALSE, out.width = '60%', fig.align='center'}
+```{r scatterplot, message=FALSE, warning=FALSE, fig.height=5, fig.width=8, fig.show = "hold", fig.align='center'}
 ggplot(pinguinos, aes(masa_corporal_g,largo_aleta_mm, color=especie)) +
-  geom_point() +
+  geom_point(size= 2) +
   scale_color_manual(values = colores) +
-  labs(x= 'masa corporal (gr.)', y='largo aleta(mm)', title= 'Relación entre masa corporal y el largo de la aleta') +
+  labs(x= 'masa corporal (gr.)', y='largo aleta(mm.)', title= 'Relación entre masa corporal \n y largo de la aleta') +
   theme_ipsum_tw()
 ```
 ---
 ## ¿En cada isla viven todas las especies de pinguinos?
 
-```{r jitter-plot, message=FALSE, warning=FALSE, out.width = '50%', fig.align='center'}
+```{r jitter-plot, message=FALSE, warning=FALSE, fig.height=5, fig.width=8, fig.show = "hold", fig.align='center'}
 ggplot(pinguinos, aes(x = isla, y = especie, color = especie)) +   
   geom_jitter(size = 3) + 
   scale_color_manual(values = colores) +
+  labs(y=" ", title = "¿En cuál isla vive cada especie?") +
     theme_ipsum_tw()
 ```
 
@@ -393,11 +391,11 @@ ggplot(pinguinos, aes(x = isla, y = especie, color = especie)) +
 
 background-image: url(img/penguin4.jpg)
 background-size: cover
-class: inverse, animated slideInRight fadeOutLeft, middle,animated animate__heartBeat
+class: inverse, middle, animated slideInRight fadeOutLeft
 ## Siguiente Paso `r emo::ji("crystal_ball")`
 
 
-### - ¿Es posible predecir la longitud de las alas en función de la lmasa corporal o en función de la masa corporal + longitud_pico?
+### - ¿Es posible predecir la longitud de las aletas en función de la masa corporal o en función de la masa corporal +  la longitud del pico?
 
 --
 
@@ -411,13 +409,16 @@ background-size: cover
 
 # Bibliografía
 
-### * R para Ciencia de datos
+### - [R para Ciencia de  Datos](https://es.r4ds.hadley.nz/an%C3%A1lisis-exploratorio-de-datos-eda.html)
 
-### * Education Rstudio (https://education.rstudio.com/blog/2020/07/palmerpenguins-cran/)
+### - [Education Rstudio](https://education.rstudio.com/blog/2020/07/palmerpenguins-cran/)
 
-### * Las Imágenes utilizadas fueron tomadas de Unsplash
+### - Las Imágenes utilizadas fueron tomadas de [Unsplash](https://unsplash.com/)
 ---
-
+background-image: url(img/penguin3.jpg)
+background-size: cover
+class: top, center
+# ¡GRACIAS! `r emo::ji("sparkler")`
 
 
 
